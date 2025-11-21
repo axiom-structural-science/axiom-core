@@ -91,3 +91,23 @@ Test AXIOM online: [Online Python](https://www.online-python.com/)
 - Educators teaching systems thinking
 - Students learning structural analysis
 - Interdisciplinary knowledge integration
+
+
+
+## 🎯 Multi-Modal Analysis (v2.0)
+
+AXIOM now supports three distinct analysis modes:
+
+### 🔄 Process Analysis 
+For causal, dynamic systems
+*Examples: "Neurons process information", "Energy flows through ecosystems"*
+
+### 📋 Descriptive Analysis
+For static properties and definitions  
+*Examples: "Earth is spherical", "Water is H₂O"*
+
+### ⚖️ Comparative Analysis
+For relationships and analogies
+*Examples: "Brains are like computers", "Atoms resemble solar systems"*
+
+**[Access Multi-Modal AXIOM](https://axiom-structural-science.github.io/axiom-core/axiom_multimodal.html)**
