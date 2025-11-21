@@ -27,3 +27,10 @@ python axiom_cli.py
 Example:
 Enter: "Electrons flow in orbits creating stable atoms"
 Output: Symbols: ⌒┘┬— | STI Score: 0.774
+
+
+## Validation Results
+✅ **First tests successful** - See [RESULTS.md](RESULTS.md) for detailed analysis of AXIOM applied to neuroscience, physics, ecology, and computer science examples.
+
+## Live Demo
+Test AXIOM online: [Online Python](https://www.online-python.com/)
