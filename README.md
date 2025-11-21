@@ -113,7 +113,43 @@ For relationships and analogies
 **[Access Multi-Modal AXIOM](https://axiom-structural-science.github.io/axiom-core/axiom_multimodal.html)**
 
 
-Axiom complete demo added
+## 📚 AXIOM Example Library
 
+Explore AXIOM in action through our interactive example library featuring 10 fully analyzed case studies across multiple domains.
 
-Axiom examples library added 
+### 🎯 [View Interactive Example Library](https://axiom-structural-science.github.io/axiom-core/axiom_example_library.html)
+
+### Features:
+- **10 Domain-Specific Case Studies** including Physics, Neuroscience, AI, Economics, and more
+- **Interactive Scrollable Cards** with expandable detailed analysis
+- **Real-time STI/CTI Calculations** showing structural completeness and truth indices
+- **Complete AXIOM Pipeline** demonstration for each example
+- **Mobile-Responsive Design** with smooth animations
+- **Accessibility-First** implementation
+
+### Case Studies Included:
+1. **🔬 Physics**: Dark Matter - Missing Mechanism
+2. **🧬 Biology**: DNA Structural Stability  
+3. **🤖 AI**: Explainability - The Black Box Problem
+4. **🧠 Neuroscience**: Consciousness - The Hard Problem
+5. **🎨 Psychology**: Why Humans Find Sunsets Beautiful
+6. **💹 Economics**: Market Crashes - Structural Triggers
+7. **💭 Cognition**: Working Memory Formation
+8. **📐 Geometry**: Why Area of Circle = πr²
+9. **✨ Astrology**: Structural Elegance vs Empirical Binding
+10. **🔢 Mathematics**: Prime Distribution Patterns
+
+### Each Example Shows:
+- **Structural Analysis** with node mapping
+- **STI/CTI Scoring** with weighted calculations
+- **Hypothesis Generation** based on architectural gaps
+- **Prediction Derivation** with parameter ranges
+- **Solution Prescription** for architectural optimization
+- **Multi-layer Validation** with empirical evidence
+
+### Quick Access:
+```html
+<!-- Direct link to the library -->
+<a href="https://axiom-structural-science.github.io/axiom-core/axiom_example_library.html">
+  AXIOM Example Library
+</a> 
