@@ -71,3 +71,23 @@ Test AXIOM online: [Online Python](https://www.online-python.com/)
 - **Mobile-friendly** design
 - **Example systems** for quick testing
 - **Completely free** - runs in your browser
+
+
+## 🌐 Live Web Application
+
+**AXIOM Framework is now available as a fully functional web application!**
+
+### 🚀 [Access Live AXIOM Web Interface](https://axiom-structural-science.github.io/axiom-core/axiom_web.html)
+
+### Features:
+- **Zero installation** - runs in any modern browser
+- **Real-time structural analysis** 
+- **Beautiful visual results**
+- **Mobile responsive design**
+- **Example systems** for instant testing
+
+### Perfect For:
+- Researchers analyzing scientific explanations
+- Educators teaching systems thinking
+- Students learning structural analysis
+- Interdisciplinary knowledge integration
