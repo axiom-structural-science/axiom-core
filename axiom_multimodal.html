@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AXIOM v2.0 - Multi-Modal Analysis</title>
+    <style>
+        /* [Keep all your existing beautiful CSS] */
+        
+        .mode-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .mode-btn {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            background: white;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .mode-btn.active {
+            border-color: #3498db;
+            background: #3498db;
+            color: white;
+        }
+        
+        .mode-description {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌌 AXIOM FRAMEWORK v2.0</h1>
+            <div class="subtitle">Multi-Modal Structural Analysis</div>
+        </div>
+        
+        <div class="content">
+            <!-- MODE SELECTOR -->
+            <div class="mode-selector">
+                <div class="mode-btn active" onclick="setMode('process')">
+                    🔄 Process Analysis
+                </div>
+                <div class="mode-btn" onclick="setMode('descriptive')">
+                    📋 Descriptive Analysis  
+                </div>
+                <div class="mode-btn" onclick="setMode('comparative')">
+                    ⚖️ Comparative Analysis
+                </div>
+            </div>
+            
+            <!-- MODE DESCRIPTIONS -->
+            <div id="processDesc" class="mode-description" style="display: block;">
+                <strong>🔄 Process Analysis:</strong> Analyze causal, dynamic systems. Best for explanations of how things work, change, or evolve.
+                <br><em>Examples: "Neurons process information", "Energy flows through ecosystems"</em>
+            </div>
+            
+            <div id="descriptiveDesc" class="mode-description">
+                <strong>📋 Descriptive Analysis:</strong> Analyze static properties and definitions. Best for what things are rather than how they work.
+                <br><em>Examples: "Earth is spherical", "Water is H₂O", "Gold is conductive"</em>
+            </div>
+            
+            <div id="comparativeDesc" class="mode-description">
+                <strong>⚖️ Comparative Analysis:</strong> Analyze relationships between systems. Best for analogies, metaphors, and contrasts.
+                <br><em>Examples: "Brains are like computers", "Atoms resemble solar systems"</em>
+            </div>
+            
+            <!-- REST OF YOUR EXISTING INTERFACE -->
+            <div class="input-section">
+                <h2 id="analysisTitle">🔍 Analyze Process Systems</h2>
+                <textarea id="inputText" placeholder="Describe any system, property, or comparison..."></textarea>
+                <button class="analyze-btn" onclick="analyzeSystem()">🚀 Analyze Structure</button>
+                
+                <div class="examples">
+                    <strong>Try examples:</strong><br>
+                    <button class="example-btn" onclick="loadExample(0)">Process</button>
+                    <button class="example-btn" onclick="loadExample(1)">Descriptive</button>
+                    <button class="example-btn" onclick="loadExample(2)">Comparative</button>
+                </div>
+            </div>
+            
+            <div id="resultsSection" class="results-section">
+                <!-- Results will go here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentMode = 'process';
+        
+        // Enhanced examples for multi-modal
+        const multiModalExamples = {
+            process: [
+                "Neurons process information to form memories",
+                "Energy flows through ecosystems transforming nutrients",
+                "Electrons orbit nucleus creating stable atoms"
+            ],
+            descriptive: [
+                "The planet Earth is an elliptical sphere in shape",
+                "Water molecules consist of two hydrogen atoms and one oxygen atom", 
+                "Gold is a highly conductive metal with atomic number 79"
+            ],
+            comparative: [
+                "The human brain operates like a complex computer",
+                "Atomic structure resembles a miniature solar system",
+                "Economic markets function similarly to ecological systems"
+            ]
+        };
+
+        function setMode(mode) {
+            currentMode = mode;
+            
+            // Update active button
+            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Update description visibility
+            document.querySelectorAll('.mode-description').forEach(desc => desc.style.display = 'none');
+            document.getElementById(mode + 'Desc').style.display = 'block';
+            
+            // Update title and placeholder
+            const titles = {
+                process: '🔍 Analyze Process Systems',
+                descriptive: '📋 Analyze Descriptive Claims', 
+                comparative: '⚖️ Analyze Comparative Relationships'
+            };
+            
+            const placeholders = {
+                process: 'Describe any causal, dynamic system...',
+                descriptive: 'Describe any static property or definition...',
+                comparative: 'Describe any comparison, analogy, or relationship...'
+            };
+            
+            document.getElementById('analysisTitle').textContent = titles[mode];
+            document.getElementById('inputText').placeholder = placeholders[mode];
+        }
+
+        function loadExample(index) {
+            const examples = multiModalExamples[currentMode];
+            if (examples && examples[index]) {
+                document.getElementById('inputText').value = examples[index];
+            }
+        }
+
+        // ENHANCED PARSER WITH MULTI-MODAL SUPPORT
+        const multiModalMappings = {
+            process: {
+                // Your existing process mappings
+                INITIATION: ['start', 'begin', 'initiate', 'source', 'origin', 'create', 'generate', 'big bang', 'birth', 'formation', 'emit'],
+                FLOW: ['flow', 'transfer', 'move', 'current', 'propagate', 'travel', 'transmit', 'orbit', 'revolve', 'circulate', 'stream'],
+                PROCESSING: ['process', 'transform', 'compute', 'convert', 'calculate', 'change', 'react', 'metabolize', 'digest', 'analyze'],
+                IMPRINT: ['store', 'remember', 'imprint', 'encode', 'memorize', 'save', 'record', 'learn', 'retain', 'capture', 'memory'],
+                EMERGENCE: ['emerge', 'create', 'form', 'generate', 'arise', 'become', 'develop', 'consciousness', 'intelligence', 'life'],
+                CONTAINMENT: ['contain', 'bound', 'limit', 'restrict', 'constrain', 'within', 'stable', 'attract', 'hold', 'capture', 'orbit'],
+                RECURRENCE: ['repeat', 'cycle', 'oscillate', 'recur', 'periodic', 'rhythm', 'pattern', 'loop', 'heartbeat', 'seasonal']
+            },
+            descriptive: {
+                IDENTITY: ['identity', 'self', 'essence', 'unique', 'distinct', 'individual', 'character', 'nature', 'planet', 'earth', 'sphere', 'molecule', 'atom', 'metal', 'gold', 'water'],
+                MANIFESTATION: ['shape', 'form', 'structure', 'appearance', 'geometry', 'physical', 'property', 'characteristic', 'feature', 'consist', 'comprise', 'made of'],
+                COMPOSITION: ['element', 'compound', 'mixture', 'composition', 'makeup', 'constituent', 'component', 'part'],
+                PROPERTY: ['conductive', 'dense', 'hard', 'soft', 'liquid', 'solid', 'gas', 'malleable', 'ductile', 'property', 'attribute', 'quality']
+            },
+            comparative: {
+                CONNECTION: ['like', 'similar', 'resemble', 'analogous', 'equivalent', 'parallel', 'comparison', 'metaphor', 'simile'],
+                RELATIONSHIP: ['relationship', 'connection', 'correspondence', 'mapping', 'isomorphism', 'pattern'],
+                SYNC: ['mirror', 'reflect', 'echo', 'match', 'correlate', 'synchronize'],
+                DOMAIN: ['system', 'model', 'framework', 'structure', 'organization', 'architecture']
+            }
+        };
+
+        function analyzeSystem() {
+            const text = document.getElementById('inputText').value.trim();
+            if (!text) {
+                alert('Please enter a description to analyze.');
+                return;
+            }
+
+            const result = multiModalParse(text, currentMode);
+            displayMultiModalResults(result, currentMode);
+        }
+
+        function multiModalParse(text, mode) {
+            const mappings = multiModalMappings[mode];
+            const symbols = [];
+            const textLower = text.toLowerCase();
+            
+            for (const [nodeType, keywords] of Object.entries(mappings)) {
+                if (keywords.some(keyword => advancedMatch(keyword, textLower))) {
+                    symbols.push(nodeType);
+                }
+            }
+            
+            return {
+                symbols: symbols,
+                mode: mode,
+                text: text
+            };
+        }
+
+        function displayMultiModalResults(result, mode) {
+            // Different display logic for each mode
+            const symbolsDisplay = document.getElementById('symbolsDisplay');
+            const stiElement = document.getElementById('stiScore');
+            
+            if (mode === 'process') {
+                // Your existing process display logic
+                const stiResult = calculateSTI(result.symbols);
+                symbolsDisplay.textContent = result.symbols.map(s => AXIOMNodes[s].symbol).join('') || 'No process patterns detected';
+                stiElement.textContent = stiResult.stiScore;
+                // ... rest of process display
+            } else if (mode === 'descriptive') {
+                const completeness = calculateDescriptiveCompleteness(result.symbols);
+                symbolsDisplay.textContent = result.symbols.map(s => AXIOMNodes[s].symbol).join('') || 'No descriptive patterns detected';
+                stiElement.textContent = completeness.score;
+                stiElement.className = completeness.score >= 0.6 ? 'excellent' : completeness.score >= 0.3 ? 'good' : 'poor';
+                // ... descriptive-specific display
+            } else if (mode === 'comparative') {
+                const alignment = calculateComparativeAlignment(result.symbols);
+                symbolsDisplay.textContent = result.symbols.map(s => AXIOMNodes[s].symbol).join('') || 'No comparative patterns detected';
+                stiElement.textContent = alignment.score;
+                stiElement.className = alignment.score >= 0.7 ? 'excellent' : alignment.score >= 0.4 ? 'good' : 'poor';
+                // ... comparative-specific display
+            }
+            
+            document.getElementById('resultsSection').style.display = 'block';
+            document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Keep your existing advancedMatch function and other utilities
+    </script>
+</body>
+</html>
