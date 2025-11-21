@@ -3,47 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AXIOM Multi-Modal - Simple</title>
+    <title>AXIOM Multi-Modal - Enhanced</title>
     <style>
-        body { font-family: Arial, sans-serif; padding: 20px; }
-        .container { max-width: 800px; margin: 0 auto; }
-        textarea { width: 100%; height: 100px; margin: 10px 0; }
-        button { padding: 10px 20px; font-size: 16px; }
-        .results { margin-top: 20px; padding: 15px; background: #f5f5f5; }
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f0f2f5; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        textarea { width: 100%; height: 100px; margin: 10px 0; padding: 10px; border: 2px solid #ddd; border-radius: 5px; }
+        button { padding: 12px 24px; font-size: 16px; background: #3498db; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        button:hover { background: #2980b9; }
+        .results { margin-top: 20px; padding: 15px; background: #e8f4f8; border-radius: 5px; border-left: 4px solid #3498db; }
+        .mode-selector { margin: 15px 0; }
+        .mode-selector label { margin-right: 15px; }
+        .symbols { font-size: 24px; font-family: 'Courier New', monospace; margin: 10px 0; }
+        .score { font-size: 20px; font-weight: bold; margin: 10px 0; }
+        .excellent { color: #27ae60; }
+        .good { color: #f39c12; }
+        .poor { color: #e74c3c; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🌌 AXIOM Multi-Modal Test</h1>
+        <h1>🌌 AXIOM Multi-Modal Analysis</h1>
         
-        <div>
-            <label><input type="radio" name="mode" value="process" checked> Process Analysis</label>
-            <label><input type="radio" name="mode" value="descriptive"> Descriptive Analysis</label>
-            <label><input type="radio" name="mode" value="comparative"> Comparative Analysis</label>
+        <div class="mode-selector">
+            <label><input type="radio" name="mode" value="process" checked> 🔄 Process Analysis</label>
+            <label><input type="radio" name="mode" value="descriptive"> 📋 Descriptive Analysis</label>
+            <label><input type="radio" name="mode" value="comparative"> ⚖️ Comparative Analysis</label>
         </div>
         
-        <textarea id="inputText" placeholder="Enter your statement here..."></textarea>
-        <button onclick="analyzeSystem()">Analyze Structure</button>
+        <textarea id="inputText" placeholder="Enter your scientific statement here...">Quantum particles exist in superposition until measurement collapses their wave function</textarea>
+        <button onclick="analyzeSystem()">🚀 Analyze Structure</button>
         
         <div id="results" class="results" style="display: none;">
-            <h3>Results:</h3>
-            <div id="output"></div>
+            <h3>📊 Analysis Results:</h3>
+            <div class="symbols" id="symbolsOutput"></div>
+            <div class="score" id="scoreOutput"></div>
+            <div id="analysisOutput"></div>
         </div>
     </div>
 
     <script>
+        // ENHANCED KEYWORD DATABASE
+        const enhancedKeywords = {
+            process: {
+                'flow': '⌒', 'process': '█', 'transform': '█', 'create': '┬', 'form': '┬', 
+                'store': '┴', 'memory': '┴', 'cycle': '┘', 'repeat': '┘', 'oscillate': '┘',
+                'move': '⌒', 'transfer': '⌒', 'propagate': '⌒', 'orbit': '⌒', 'revolve': '⌒',
+                'compute': '█', 'calculate': '█', 'react': '█', 'metabolize': '█', 'digest': '█',
+                'emerge': '┬', 'become': '┬', 'develop': '┬', 'arise': '┬', 'generate': '┬',
+                'contain': '—', 'bound': '—', 'limit': '—', 'stable': '—', 'attract': '—',
+                'start': '│', 'begin': '│', 'initiate': '│', 'source': '│', 'origin': '│',
+                // Quantum physics terms
+                'superposition': '¬', 'collapse': '█', 'measurement': '█', 'wave function': '⌒',
+                'quantum': '¬', 'particles': '⟦⟧', 'observe': '█', 'decoherence': '█',
+                'entanglement': '┤', 'coherence': '≡', 'interfere': '≡'
+            },
+            descriptive: {
+                'is': '⟦⟧', 'are': '⟦⟧', 'has': '┌', 'have': '┌', 'exists': '⟦⟧',
+                'shape': '┌', 'property': '┌', 'characteristic': '┌', 'feature': '┌',
+                'structure': '┌', 'appearance': '┌', 'geometry': '┌', 'physical': '┌',
+                'consist': '┌', 'comprise': '┌', 'made of': '┌', 'composition': '┌',
+                'element': '⟦⟧', 'compound': '⟦⟧', 'mixture': '⟦⟧', 'material': '⟦⟧',
+                'planet': '⟦⟧', 'earth': '⟦⟧', 'sphere': '┌', 'metal': '⟦⟧', 'conductive': '┌'
+            },
+            comparative: {
+                'like': '≡', 'similar': '≡', 'resemble': '≡', 'compared': '≡', 'analogous': '≡',
+                'relationship': '┤', 'connection': '┤', 'correspond': '≡', 'parallel': '≡',
+                'mirror': '≡', 'reflect': '≡', 'echo': '≡', 'match': '≡', 'correlate': '≡',
+                'metaphor': '≡', 'simile': '≡', 'isomorphism': '≡', 'model': '└'
+            }
+        };
+
         function analyzeSystem() {
             const text = document.getElementById('inputText').value;
             const mode = document.querySelector('input[name="mode"]:checked').value;
             
-            if (!text) {
+            if (!text.trim()) {
                 alert('Please enter some text');
                 return;
             }
             
-            // Simple analysis based on mode
-            let result = '';
-            
+            let result;
             if (mode === 'process') {
                 result = analyzeProcess(text);
             } else if (mode === 'descriptive') {
@@ -52,72 +91,108 @@
                 result = analyzeComparative(text);
             }
             
-            document.getElementById('output').innerHTML = result;
-            document.getElementById('results').style.display = 'block';
+            displayResults(result);
         }
         
         function analyzeProcess(text) {
-            const keywords = {
-                'flow': '⌒', 'process': '█', 'transform': '█', 'create': '┬', 
-                'form': '┬', 'store': '┴', 'memory': '┴', 'cycle': '┘'
-            };
-            
             let symbols = [];
+            let detectedWords = [];
             let lowerText = text.toLowerCase();
             
-            for (let [word, symbol] of Object.entries(keywords)) {
+            for (let [word, symbol] of Object.entries(enhancedKeywords.process)) {
                 if (lowerText.includes(word)) {
                     symbols.push(symbol);
+                    detectedWords.push(word);
                 }
             }
             
-            return `Mode: Process Analysis<br>
-                    Symbols: ${symbols.join('')}<br>
-                    STI Score: ${(symbols.length * 0.1).toFixed(2)}<br>
-                    Analysis: Found ${symbols.length} process elements`;
+            // Remove duplicates and order naturally
+            symbols = [...new Set(symbols)];
+            const score = Math.min((symbols.length * 0.15), 0.95).toFixed(2);
+            
+            return {
+                mode: 'Process Analysis',
+                symbols: symbols.join(''),
+                score: score,
+                detected: detectedWords,
+                analysis: `Found ${symbols.length} process elements: ${detectedWords.join(', ')}`
+            };
         }
         
         function analyzeDescriptive(text) {
-            const keywords = {
-                'is': '⟦⟧', 'are': '⟦⟧', 'has': '┌', 'have': '┌',
-                'shape': '┌', 'property': '┌', 'characteristic': '┌'
-            };
-            
             let symbols = [];
+            let detectedWords = [];
             let lowerText = text.toLowerCase();
             
-            for (let [word, symbol] of Object.entries(keywords)) {
+            for (let [word, symbol] of Object.entries(enhancedKeywords.descriptive)) {
                 if (lowerText.includes(word)) {
                     symbols.push(symbol);
+                    detectedWords.push(word);
                 }
             }
             
-            return `Mode: Descriptive Analysis<br>
-                    Symbols: ${symbols.join('')}<br>
-                    Completeness: ${(symbols.length * 0.15).toFixed(2)}<br>
-                    Analysis: Found ${symbols.length} descriptive elements`;
+            symbols = [...new Set(symbols)];
+            const score = Math.min((symbols.length * 0.12), 0.95).toFixed(2);
+            
+            return {
+                mode: 'Descriptive Analysis',
+                symbols: symbols.join(''),
+                score: score,
+                detected: detectedWords,
+                analysis: `Found ${symbols.length} descriptive elements: ${detectedWords.join(', ')}`
+            };
         }
         
         function analyzeComparative(text) {
-            const keywords = {
-                'like': '≡', 'similar': '≡', 'resemble': '≡', 'compared': '≡',
-                'analogous': '≡', 'relationship': '┤', 'connection': '┤'
-            };
-            
             let symbols = [];
+            let detectedWords = [];
             let lowerText = text.toLowerCase();
             
-            for (let [word, symbol] of Object.entries(keywords)) {
+            for (let [word, symbol] of Object.entries(enhancedKeywords.comparative)) {
                 if (lowerText.includes(word)) {
                     symbols.push(symbol);
+                    detectedWords.push(word);
                 }
             }
             
-            return `Mode: Comparative Analysis<br>
-                    Symbols: ${symbols.join('')}<br>
-                    Alignment: ${(symbols.length * 0.2).toFixed(2)}<br>
-                    Analysis: Found ${symbols.length} comparative elements`;
+            symbols = [...new Set(symbols)];
+            const score = Math.min((symbols.length * 0.18), 0.95).toFixed(2);
+            
+            return {
+                mode: 'Comparative Analysis',
+                symbols: symbols.join(''),
+                score: score,
+                detected: detectedWords,
+                analysis: `Found ${symbols.length} comparative elements: ${detectedWords.join(', ')}`
+            };
         }
+        
+        function displayResults(result) {
+            const symbolsElement = document.getElementById('symbolsOutput');
+            const scoreElement = document.getElementById('scoreOutput');
+            const analysisElement = document.getElementById('analysisOutput');
+            
+            symbolsElement.textContent = `Symbols: ${result.symbols || 'None detected'}`;
+            
+            scoreElement.textContent = `Score: ${result.score}`;
+            scoreElement.className = 'score ';
+            if (result.score >= 0.7) scoreElement.classList.add('excellent');
+            else if (result.score >= 0.4) scoreElement.classList.add('good');
+            else scoreElement.classList.add('poor');
+            
+            analysisElement.innerHTML = `
+                <strong>Mode:</strong> ${result.mode}<br>
+                <strong>Analysis:</strong> ${result.analysis}<br>
+                <strong>Detected Terms:</strong> ${result.detected.join(', ') || 'None'}
+            `;
+            
+            document.getElementById('results').style.display = 'block';
+        }
+        
+        // Auto-analyze on load with the quantum example
+        window.onload = function() {
+            setTimeout(() => analyzeSystem(), 500);
+        };
     </script>
 </body>
 </html>
