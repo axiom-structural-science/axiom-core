@@ -111,3 +111,9 @@ For relationships and analogies
 *Examples: "Brains are like computers", "Atoms resemble solar systems"*
 
 **[Access Multi-Modal AXIOM](https://axiom-structural-science.github.io/axiom-core/axiom_multimodal.html)**
+
+
+Axiom complete demo added
+
+
+Axiom examples library added 
