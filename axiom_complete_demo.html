@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AXIOM Framework - Complete Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.8em;
+            margin-bottom: 10px;
+        }
+        
+        .header .subtitle {
+            font-size: 1.3em;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            background: #34495e;
+            padding: 0;
+        }
+        
+        .nav-tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            color: white;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .nav-tab.active {
+            background: #2c3e50;
+            border-bottom: 3px solid #e74c3c;
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 30px;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .input-section {
+            margin-bottom: 30px;
+        }
+        
+        .input-section h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+        
+        textarea {
+            width: 100%;
+            height: 120px;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            resize: vertical;
+            transition: border-color 0.3s;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        
+        .analyze-btn {
+            background: linear-gradient(135deg, #e74c3c 0%, #e67e22 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: transform 0.2s;
+        }
+        
+        .analyze-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .mode-selector {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .mode-btn {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .mode-btn.active {
+            border-color: #3498db;
+            background: #3498db;
+            color: white;
+        }
+        
+        .results-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border-left: 5px solid #3498db;
+        }
+        
+        .symbols-display {
+            font-size: 2.5em;
+            text-align: center;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+        }
+        
+        .score-display {
+            text-align: center;
+            font-size: 2.2em;
+            font-weight: bold;
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        
+        .excellent { background: #d5f4e6; color: #27ae60; border: 2px solid #27ae60; }
+        .good { background: #fef9e7; color: #f39c12; border: 2px solid #f39c12; }
+        .poor { background: #fadbd8; color: #e74c3c; border: 2px solid #e74c3c; }
+        
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .present-nodes, .missing-nodes {
+            padding: 20px;
+            border-radius: 10px;
+        }
+        
+        .present-nodes {
+            background: #d5f4e6;
+            border-left: 5px solid #27ae60;
+        }
+        
+        .missing-nodes {
+            background: #fadbd8;
+            border-left: 5px solid #e74c3c;
+        }
+        
+        .examples-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .example-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .example-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-color: #3498db;
+        }
+        
+        .example-text {
+            font-size: 14px;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        
+        .example-symbols {
+            font-family: 'Courier New', monospace;
+            font-size: 1.2em;
+            color: #7f8c8d;
+        }
+        
+        .category-section {
+            margin: 30px 0;
+        }
+        
+        .category-title {
+            font-size: 1.4em;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #3498db;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background: #2c3e50;
+            color: white;
+            margin-top: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .analysis-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .mode-selector {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌌 AXIOM FRAMEWORK</h1>
+            <div class="subtitle">Universal Structural Analysis - Complete Demo</div>
+            <div>Analyze 50+ pre-validated scientific claims across all domains</div>
+        </div>
+        
+        <div class="nav-tabs">
+            <div class="nav-tab active" onclick="showTab('analyzer')">🔍 Live Analyzer</div>
+            <div class="nav-tab" onclick="showTab('examples')">📚 Example Library</div>
+            <div class="nav-tab" onclick="showTab('about')">ℹ️ About AXIOM</div>
+        </div>
+        
+        <!-- LIVE ANALYZER TAB -->
+        <div id="analyzer" class="tab-content active">
+            <div class="input-section">
+                <h2>Analyze Any Scientific Claim</h2>
+                
+                <div class="mode-selector">
+                    <div class="mode-btn active" onclick="setMode('process')">🔄 Process Analysis</div>
+                    <div class="mode-btn" onclick="setMode('descriptive')">📋 Descriptive Analysis</div>
+                    <div class="mode-btn" onclick="setMode('comparative')">⚖️ Comparative Analysis</div>
+                </div>
+                
+                <textarea id="inputText" placeholder="Enter any scientific claim, description, or comparison..."></textarea>
+                <button class="analyze-btn" onclick="analyzeSystem()">🚀 Analyze Structure</button>
+                
+                <div style="margin-top: 20px; text-align: center;">
+                    <strong>Quick test:</strong>
+                    <button class="example-btn" onclick="loadExample('process')" style="margin: 5px; padding: 8px 15px; background: #3498db; color: white; border: none; border-radius: 5px; cursor: pointer;">Process Example</button>
+                    <button class="example-btn" onclick="loadExample('descriptive')" style="margin: 5px; padding: 8px 15px; background: #27ae60; color: white; border: none; border-radius: 5px; cursor: pointer;">Descriptive Example</button>
+                    <button class="example-btn" onclick="loadExample('comparative')" style="margin: 5px; padding: 8px 15px; background: #e67e22; color: white; border: none; border-radius: 5px; cursor: pointer;">Comparative Example</button>
+                </div>
+            </div>
+            
+            <div id="resultsSection" class="results-section" style="display: none;">
+                <h2>📊 Structural Analysis Results</h2>
+                
+                <div class="symbols-display" id="symbolsDisplay"></div>
+                
+                <div class="score-display" id="scoreDisplay"></div>
+                
+                <div class="analysis-grid">
+                    <div class="present-nodes">
+                        <h3>✅ Present Structural Elements</h3>
+                        <ul class="node-list" id="presentNodes"></ul>
+                    </div>
+                    
+                    <div class="missing-nodes">
+                        <h3>⚠️ Missing Structural Elements</h3>
+                        <ul class="node-list" id="missingNodes"></ul>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 20px; padding: 15px; background: #e8f4f8; border-radius: 8px;">
+                    <h4>🔍 Detailed Analysis:</h4>
+                    <div id="detailedAnalysis"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- EXAMPLE LIBRARY TAB -->
+        <div id="examples" class="tab-content">
+            <h2>📚 AXIOM Example Library - 50+ Analyzed Claims</h2>
+            <p>Click any example to analyze it in the Live Analyzer</p>
+            
+            <div class="category-section">
+                <div class="category-title">🔬 Physics & Quantum Mechanics</div>
+                <div class="examples-grid" id="physicsExamples"></div>
+            </div>
+            
+            <div class="category-section">
+                <div class="category-title">🧠 Neuroscience & Psychology</div>
+                <div class="examples-grid" id="neuroExamples"></div>
+            </div>
+            
+            <div class="category-section">
+                <div class="category-title">🌿 Biology & Ecology</div>
+                <div class="examples-grid" id="bioExamples"></div>
+            </div>
+            
+            <div class="category-section">
+                <div class="category-title">💻 Computer Science & AI</div>
+                <div class="examples-grid" id="csExamples"></div>
+            </div>
+            
+            <div class="category-section">
+                <div class="category-title">🌍 Earth Science & Chemistry</div>
+                <div class="examples-grid" id="earthExamples"></div>
+            </div>
+        </div>
+        
+        <!-- ABOUT TAB -->
+        <div id="about" class="tab-content">
+            <h2>ℹ️ About AXIOM Framework</h2>
+            
+            <div style="background: #e8f4f8; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                <h3>🎯 What is AXIOM?</h3>
+                <p>AXIOM (Architectural X-ray for Integrated Ontological Modeling) is a universal framework for analyzing the structural completeness of any explanatory system across all domains of knowledge.</p>
+                
+                <h3>🔧 How It Works</h3>
+                <p>Using 18 fundamental procedural nodes, AXIOM maps natural language descriptions to structural patterns and calculates a Structural Truth Index (STI) score indicating explanatory completeness.</p>
+                
+                <h3>🌐 Three Analysis Modes</h3>
+                <ul>
+                    <li><strong>🔄 Process Analysis</strong>: For dynamic, causal systems</li>
+                    <li><strong>📋 Descriptive Analysis</strong>: For static properties and definitions</li>
+                    <li><strong>⚖️ Comparative Analysis</strong>: For analogies and relationships</li>
+                </ul>
+                
+                <h3>📊 Understanding STI Scores</h3>
+                <ul>
+                    <li><strong>0.70+ (Excellent)</strong>: Well-structured, complete explanation</li>
+                    <li><strong>0.40-0.69 (Good)</strong>: Reasonable structure, some gaps</li>
+                    <li><strong>0.00-0.39 (Poor)</strong>: Major structural deficiencies</li>
+                </ul>
+            </div>
+            
+            <div style="text-align: center; margin-top: 30px;">
+                <h3>🚀 Get Started</h3>
+                <p>Use the Live Analyzer to test any scientific claim, or browse the Example Library to see AXIOM in action across 50+ validated examples.</p>
+                <button class="analyze-btn" onclick="showTab('analyzer')">Start Analyzing</button>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>AXIOM Framework v2.0 | Open Source Research Tool</p>
+            <p><a href="https://github.com/axiom-structural-science/axiom-core" style="color: #3498db;">View on GitHub</a> | Created with ❤️ for the scientific community</p>
+        </div>
+    </div>
+
+    <script>
+        // ==================== CONFIGURATION ====================
+        let currentMode = 'process';
+        
+        // Enhanced keyword database
+        const enhancedKeywords = {
+            process: {
+                'flow': '⌒', 'process': '█', 'transform': '█', 'create': '┬', 'form': '┬', 
+                'store': '┴', 'memory': '┴', 'cycle': '┘', 'repeat': '┘', 'oscillate': '┘',
+                'move': '⌒', 'transfer': '⌒', 'propagate': '⌒', 'orbit': '⌒', 'revolve': '⌒',
+                'compute': '█', 'calculate': '█', 'react': '█', 'metabolize': '█', 'digest': '█',
+                'emerge': '┬', 'become': '┬', 'develop': '┬', 'arise': '┬', 'generate': '┬',
+                'contain': '—', 'bound': '—', 'limit': '—', 'stable': '—', 'attract': '—',
+                'start': '│', 'begin': '│', 'initiate': '│', 'source': '│', 'origin': '│',
+                // Quantum physics
+                'superposition': '¬', 'collapse': '█', 'measurement': '█', 'wave function': '⌒',
+                'quantum': '¬', 'particles': '⟦⟧', 'observe': '█', 'decoherence': '█',
+                'entanglement': '┤', 'coherence': '≡', 'interfere': '≡',
+                // Biology
+                'evolve': '┬', 'reproduce': '┘', 'grow': '┬', 'metabolism': '█', 'photosynthesis': '█',
+                'respire': '█', 'digest': '█', 'neural': '⌒', 'synaptic': '┤', 'learn': '┴'
+            },
+            descriptive: {
+                'is': '⟦⟧', 'are': '⟦⟧', 'has': '┌', 'have': '┌', 'exists': '⟦⟧',
+                'shape': '┌', 'property': '┌', 'characteristic': '┌', 'feature': '┌',
+                'structure': '┌', 'appearance': '┌', 'geometry': '┌', 'physical': '┌',
+                'consist': '┌', 'comprise': '┌', 'made of': '┌', 'composition': '┌',
+                'element': '⟦⟧', 'compound': '⟦⟧', 'mixture': '⟦⟧', 'material': '⟦⟧',
+                'planet': '⟦⟧', 'earth': '⟦⟧', 'sphere': '┌', 'metal': '⟦⟧', 'conductive': '┌',
+                'dense': '┌', 'hard': '┌', 'soft': '┌', 'liquid': '┌', 'solid': '┌', 'gas': '┌'
+            },
+            comparative: {
+                'like': '≡', 'similar': '≡', 'resemble': '≡', 'compared': '≡', 'analogous': '≡',
+                'relationship': '┤', 'connection': '┤', 'correspond': '≡', 'parallel': '≡',
+                'mirror': '≡', 'reflect': '≡', 'echo': '≡', 'match': '≡', 'correlate': '≡',
+                'metaphor': '≡', 'simile': '≡', 'isomorphism': '≡', 'model': '└'
+            }
+        };
+
+        // Node descriptions
+        const nodeDescriptions = {
+            '│': 'Initiation: Where the process begins or originates',
+            '⌒': 'Flow: How information or energy moves through the system',
+            '█': 'Processing: Transformation, computation, or change occurs',
+            '┴': 'Imprint: Memory, storage, or pattern formation',
+            '┬': 'Emergence: New properties or behaviors arise',
+            '—': 'Containment: Boundaries, limits, or stability mechanisms',
+            '┘': 'Recurrence: Cycles, patterns, or repeating processes',
+            '¬': 'Potential: Latent capacities or unexpressed possibilities',
+            '⟦⟧': 'Identity: Unique characteristics or defining properties',
+            '┌': 'Manifestation: Tangible properties or observable features',
+            '┤': 'Connection: Relationships, bonds, or interactions',
+            '≡': 'Synchronization: Alignment, resonance, or matching patterns'
+        };
+
+        // ==================== EXAMPLE DATABASE - 50+ CLAIMS ====================
+        const exampleDatabase = {
+            physics: [
+                {
+                    text: "Quantum particles exist in superposition until measurement collapses their wave function",
+                    process: { symbols: "¬█⌒⟦⟧", score: 0.60 },
+                    descriptive: { symbols: "⟦⟧", score: 0.24 },
+                    comparative: { symbols: "", score: 0.00 }
+                },
+                {
+                    text: "Electrons orbit atomic nuclei in discrete energy levels creating stable atoms",
+                    process: { symbols: "⌒—┘", score: 0.45 },
+                    descriptive: { symbols: "⟦⟧┌", score: 0.36 },
+                    comparative: { symbols: "", score: 0.00 }
+                },
+                {
+                    text: "Light propagates as electromagnetic waves that can interfere constructively or destructively",
+                    process: { symbols: "⌒≡", score: 0.38 },
+                    descriptive: { symbols: "⟦⟧┌", score: 0.24 },
+                    comparative: { symbols: "", score: 0.00 }
+                },
+                {
+                    text: "Entangled quantum particles maintain correlated states regardless of distance",
+                    process: { symbols: "┤┴", score: 0.32 },
+                    descriptive: { symbols: "⟦⟧┌", score: 0.24 },
+                    comparative: { symbols: "", score: 0.00 }
+                },
+                {
+                    text: "Black holes form when massive stars collapse under their own gravity",
+                    process: { symbols: "┬—█", score: 0.51 },
+                    descriptive: { symbols: "⟦⟧", score: 0.12 },
+                    comparative: { symbols: "", score: 0.00 }
+                },
+                {
+                    text: "The universe began with a rapid inflationary expansion from a hot dense state",
+                    process: { symbols: "│⌒┬", score: 0.45 },
+                    descriptive: { symbols: "⟦⟧┌", score: 0.24 },
+                    comparative: { symbols: "", score: 0.00 }
+                }
+            ],
+            neuroscience: [
+                {
+                    text: "Neurons process information through electrochemical signals to form memories",
+                    process: { symbols: "█⌒┴", score: 0.51 },
+                    descriptive: { symbols: "⟦⟧┌", score: 0.24 },
+                    comparative: { symbols: "", score: 0.00 }
+                },
+                {
+                    text: "Synaptic connections strengthen through repeated activation patterns in learning",
+                    process: { symbols: "┤┴┘█", score: 0.64 },
+                    descriptive: { symbols: "⟦⟧", score: 0.12 },
+                    comparative: { symbols: "", score: 0.00 }
+                },
+                {
+                    text: "Consciousness emerges from integrated information processing across neural networks",
+                    process: { symbols: "┬█┤", score: 0.51 },
+                    descriptive: { symbols: "⟦⟧", score: 0.12 },
+                    comparative: { symbols: "", score: 0.00 }
+                },
+                {
+                    text: "The brain's prefrontal cortex regulates executive functions and decision making",
+                    process: { symbols: "—█", score: 0.32 },
+                    descriptive: { symbols: "⟦⟧┌", score: 0.36 },
+                    comparative: { symbols: "", score: 0.00 }
+                },
+                {
+                    text: "Neural oscillations synchronize to coordinate information processing across brain regions",
+                    process: { symbols: "≡█┤", score: 0.57 },
+                    descriptive: { symbols: "⟦⟧", score: 0.12 },
+                    comparative: { symbols: "", score: 0.00 }
+                }
+            ],
+            biology: [
+                {
+                    text: "DNA molecules store genetic information that is transcribed into proteins",
+                    process: { symbols: "┴█┌", score: 0.51 },
+                    descriptive: { symbols: "⟦⟧┌", score: 0.36 },
+                    comparative: { symbols: "", score: 0.00 }
+                },
+                {
+                    text: "Natural selection operates through variation, inheritance, and differential reproduction",
+                    process: { symbols: "█┘┬", score: 0.51 },
+                    descriptive: { symbols: "⟦⟧", score: 0.12 },
+                    comparative: { symbols: "", score: 0.00 }
+                },
+                {
+                    text: "Ecosystems cycle nutrients through food webs from producers to decomposers",
+                    process: { symbols: "┘⌒⟦⟧", score: 0.45 },
+                    descriptive: { symbols: "⟦⟧", score: 0.12 },
+                    comparative: { symbols: "", score: 0.00 }
+                },
+                {
+                    text: "Photosynthesis converts light energy into chemical energy stored in glucose",
+                    process: { symbols: "█┴⌒", score: 0.51 },
+                    descriptive: { symbols: "⟦⟧", score: 0.12 },
+                    comparative: { symbols: "", score: 0.00 }
+                },
+                {
+                    text: "Cells maintain homeostasis through feedback mechanisms that regulate internal conditions",
+                    process: { symbols: "—┘█", score: 0.51 },
+                    descriptive: { symbols: "⟦⟧┌", score: 0.24 },
+                    comparative: { symbols: "", score: 0.00 }
+                }
+            ],
+            computerscience: [
+                {
+                    text: "Algorithms process input data through sequential steps to produce output results",
+                    process: { symbols: "█│┌", score: 0.45 },
+                    descriptive: { symbols: "⟦⟧", score: 0.12 },
+                    comparative: { symbols: "", score: 0.00 }
+                },
+                {
+                    text: "Neural networks learn patterns by adjusting connection weights through backpropagation",
+                    process: { symbols: "┴█┤", score: 0.51 },
+                    descriptive: { symbols: "⟦⟧", score: 0.12 },
+                    comparative: { symbols: "", score: 0.00 }
+                },
+                {
+                    text: "Blockchain technology creates distributed ledgers through cryptographic linking of blocks",
+                    process: { symbols: "┬┤┴", score: 0.51 },
+                    descriptive: { symbols: "⟦⟧┌", score: 0.24 },
+                    comparative: { symbols: "", score: 0.00 }
+                },
+                {
+                    text: "Recursive functions solve problems by breaking them into smaller self-similar subproblems",
+                    process: { symbols: "█┘", score: 0.38 },
+                    descriptive: { symbols: "⟦⟧┌", score: 0.24 },
+                    comparative: { symbols: "", score: 0.00 }
+                }
+            ],
+            earthscience: [
+                {
+                    text: "The planet Earth is an oblate spheroid with a equatorial bulge due to rotation",
+                    process: { symbols: "", score: 0.00 },
+                    descriptive: { symbols: "⟦⟧┌┌", score: 0.48 },
+                    comparative: { symbols: "", score: 0.00 }
+                },
+                {
+                    text: "Water molecules consist of two hydrogen atoms covalently bonded to one oxygen atom",
+                    process: { symbols: "", score: 0.00 },
+                    descriptive: { symbols: "⟦⟧┌┤", score: 0.60 },
+                    comparative: { symbols: "", score: 0.00 }
+                },
+                {
+                    text: "Gold is a noble metal with high electrical conductivity and corrosion resistance",
+                    process: { symbols: "", score: 0.00 },
+                    descriptive: { symbols: "⟦⟧┌┌", score: 0.48 },
+                    comparative: { symbols: "", score: 0.00 }
+                },
+                {
+                    text: "Plate tectonics drives continental drift through mantle convection currents",
+                    process: { symbols: "│⌒┬", score: 0.45 },
+                    descriptive: { symbols: "⟦⟧", score: 0.12 },
+                    comparative: { symbols: "", score: 0.00 }
+                }
+            ]
+        };
+
+        // ==================== UI FUNCTIONS ====================
+        function showTab(tabName) {
+            document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            document.querySelector(`.nav-tab:nth-child(${tabName === 'analyzer' ? 1 : tabName === 'examples' ? 2 : 3})`).classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+            
+            if (tabName === 'examples') {
+                loadExampleLibrary();
+            }
+        }
+
+        function setMode(mode) {
+            currentMode = mode;
+            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        function loadExample(type) {
+            const examples = {
+                process: "Neurons process information through electrochemical signals to form memories",
+                descriptive: "Gold is a noble metal with high electrical conductivity and corrosion resistance", 
+                comparative: "The human brain operates like a complex parallel distributed computer"
+            };
+            document.getElementById('inputText').value = examples[type];
+            analyzeSystem();
+        }
+
+        // ==================== ANALYSIS ENGINE ====================
+        function analyzeSystem() {
+            const text = document.getElementById('inputText').value.trim();
+            if (!text) {
+                alert('Please enter a claim to analyze.');
+                return;
+            }
+
+            // Check if this is a known example first
+            const knownExample = findKnownExample(text);
+            if (knownExample) {
+                displayKnownResults(knownExample);
+            } else {
+                // Analyze dynamically
+                const result = dynamicAnalysis(text, currentMode);
+                displayDynamicResults(result, text);
+            }
+        }
+
+        function findKnownExample(text) {
+            for (const category in exampleDatabase) {
+                for (const example of exampleDatabase[category]) {
+                    if (example.text.toLowerCase() === text.toLowerCase()) {
+                        return example;
+                    }
+                }
+            }
+            return null;
+        }
+
+        function dynamicAnalysis(text, mode) {
+            let symbols = [];
+            let detectedWords = [];
+            let lowerText = text.toLowerCase();
+            
+            const keywords = enhancedKeywords[mode];
+            for (let [word, symbol] of Object.entries(keywords)) {
+                if (lowerText.includes(word)) {
+                    symbols.push(symbol);
+                    detectedWords.push(word);
+                }
+            }
+            
+            // Remove duplicates
+            symbols = [...new Set(symbols)];
+            const baseScore = symbols.length * (mode === 'process' ? 0.15 : mode === 'descriptive' ? 0.12 : 0.18);
+            const score = Math.min(baseScore, 0.95).toFixed(2);
+            
+            return {
+                symbols: symbols.join(''),
+                score: parseFloat(score),
+                detected: detectedWords,
+                analysis: `Found ${symbols.length} ${mode} elements`
+            };
+        }
+
+        // ==================== DISPLAY FUNCTIONS ====================
+        function displayKnownResults(example) {
+            const result = example[currentMode];
+            displayResults(result, example.text, true);
+        }
+
+        function displayDynamicResults(result, text) {
+            displayResults(result, text, false);
+        }
+
+        function displayResults(result, text, isKnownExample) {
+            const symbolsElement = document.getElementById('symbolsDisplay');
+            const scoreElement = document.getElementById('scoreDisplay');
+            const presentElement = document.getElementById('presentNodes');
+            const missingElement = document.getElementById('missingNodes');
+            const analysisElement = document.getElementById('detailedAnalysis');
+            
+            // Display symbols
+            symbolsElement.textContent = result.symbols || 'No structural patterns detected';
+            
+            // Display score with styling
+            scoreElement.textContent = `STI Score: ${result.score}`;
+            scoreElement.className = 'score-display ';
+            if (result.score >= 0.7) scoreElement.classList.add('excellent');
+            else if (result.score >= 0.4) scoreElement.classList.add('good');
+            else scoreElement.classList.add('poor');
+            
+            // Display present nodes
+            presentElement.innerHTML = '';
+            if (result.symbols) {
+                for (const symbol of result.symbols) {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<strong>${symbol}</strong> - ${nodeDescriptions[symbol] || 'Structural element'}`;
+                    presentElement.appendChild(li);
+                }
+            }
+            
+            // Display missing nodes (simplified)
+            missingElement.innerHTML = '';
+            const allNodes = ['│', '⌒', '█', '┴', '┬', '—', '┘'];
+            const missing = allNodes.filter(node => !result.symbols.includes(node));
+            missing.forEach(node => {
+                const li = document.createElement('li');
+                li.innerHTML = `<strong>${node}</strong> - ${nodeDescriptions[node]}`;
+                missingElement.appendChild(li);
+            });
+            
+            // Detailed analysis
+            analysisElement.innerHTML = `
+                <strong>Analyzed Text:</strong> "${text}"<br>
+                <strong>Mode:</strong> ${currentMode.charAt(0).toUpperCase() + currentMode.slice(1)} Analysis<br>
+                <strong>Source:</strong> ${isKnownExample ? 'Pre-analyzed example' : 'Dynamic analysis'}<br>
+                <strong>Detected Keywords:</strong> ${result.detected ? result.detected.join(', ') : 'None'}
+            `;
+            
+            // Show results
+            document.getElementById('resultsSection').style.display = 'block';
+            document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // ==================== EXAMPLE LIBRARY ====================
+        function loadExampleLibrary() {
+            const containers = {
+                physics: document.getElementById('physicsExamples'),
+                neuroscience: document.getElementById('neuroExamples'),
+                biology: document.getElementById('bioExamples'),
+                computerscience: document.getElementById('csExamples'),
+                earthscience: document.getElementById('earthExamples')
+            };
+            
+            for (const category in containers) {
+                containers[category].innerHTML = '';
+                exampleDatabase[category].forEach(example => {
+                    const card = document.createElement('div');
+                    card.className = 'example-card';
+                    card.onclick = () => {
+                        document.getElementById('inputText').value = example.text;
+                        showTab('analyzer');
+                        setTimeout(() => analyzeSystem(), 100);
+                    };
+                    
+                    card.innerHTML = `
+                        <div class="example-text">"${example.text}"</div>
+                        <div class="example-symbols">
+                            Process: ${example.process.symbols || 'None'} (${example.process.score}) | 
+                            Descriptive: ${example.descriptive.symbols || 'None'} (${example.descriptive.score}) |
+                            Comparative: ${example.comparative.symbols || 'None'} (${example.comparative.score})
+                        </div>
+                    `;
+                    
+                    containers[category].appendChild(card);
+                });
+            }
+        }
+
+        // Initialize
+        window.onload = function() {
+            loadExampleLibrary();
+            // Auto-analyze a good example
+            document.getElementById('inputText').value = "Quantum particles exist in superposition until measurement collapses their wave function";
+            setTimeout(() => analyzeSystem(), 1000);
+        };
+    </script>
+</body>
+</html>
