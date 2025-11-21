@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AXIOM Multi-Modal - Simple</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        textarea { width: 100%; height: 100px; margin: 10px 0; }
+        button { padding: 10px 20px; font-size: 16px; }
+        .results { margin-top: 20px; padding: 15px; background: #f5f5f5; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌌 AXIOM Multi-Modal Test</h1>
+        
+        <div>
+            <label><input type="radio" name="mode" value="process" checked> Process Analysis</label>
+            <label><input type="radio" name="mode" value="descriptive"> Descriptive Analysis</label>
+            <label><input type="radio" name="mode" value="comparative"> Comparative Analysis</label>
+        </div>
+        
+        <textarea id="inputText" placeholder="Enter your statement here..."></textarea>
+        <button onclick="analyzeSystem()">Analyze Structure</button>
+        
+        <div id="results" class="results" style="display: none;">
+            <h3>Results:</h3>
+            <div id="output"></div>
+        </div>
+    </div>
+
+    <script>
+        function analyzeSystem() {
+            const text = document.getElementById('inputText').value;
+            const mode = document.querySelector('input[name="mode"]:checked').value;
+            
+            if (!text) {
+                alert('Please enter some text');
+                return;
+            }
+            
+            // Simple analysis based on mode
+            let result = '';
+            
+            if (mode === 'process') {
+                result = analyzeProcess(text);
+            } else if (mode === 'descriptive') {
+                result = analyzeDescriptive(text);
+            } else if (mode === 'comparative') {
+                result = analyzeComparative(text);
+            }
+            
+            document.getElementById('output').innerHTML = result;
+            document.getElementById('results').style.display = 'block';
+        }
+        
+        function analyzeProcess(text) {
+            const keywords = {
+                'flow': '⌒', 'process': '█', 'transform': '█', 'create': '┬', 
+                'form': '┬', 'store': '┴', 'memory': '┴', 'cycle': '┘'
+            };
+            
+            let symbols = [];
+            let lowerText = text.toLowerCase();
+            
+            for (let [word, symbol] of Object.entries(keywords)) {
+                if (lowerText.includes(word)) {
+                    symbols.push(symbol);
+                }
+            }
+            
+            return `Mode: Process Analysis<br>
+                    Symbols: ${symbols.join('')}<br>
+                    STI Score: ${(symbols.length * 0.1).toFixed(2)}<br>
+                    Analysis: Found ${symbols.length} process elements`;
+        }
+        
+        function analyzeDescriptive(text) {
+            const keywords = {
+                'is': '⟦⟧', 'are': '⟦⟧', 'has': '┌', 'have': '┌',
+                'shape': '┌', 'property': '┌', 'characteristic': '┌'
+            };
+            
+            let symbols = [];
+            let lowerText = text.toLowerCase();
+            
+            for (let [word, symbol] of Object.entries(keywords)) {
+                if (lowerText.includes(word)) {
+                    symbols.push(symbol);
+                }
+            }
+            
+            return `Mode: Descriptive Analysis<br>
+                    Symbols: ${symbols.join('')}<br>
+                    Completeness: ${(symbols.length * 0.15).toFixed(2)}<br>
+                    Analysis: Found ${symbols.length} descriptive elements`;
+        }
+        
+        function analyzeComparative(text) {
+            const keywords = {
+                'like': '≡', 'similar': '≡', 'resemble': '≡', 'compared': '≡',
+                'analogous': '≡', 'relationship': '┤', 'connection': '┤'
+            };
+            
+            let symbols = [];
+            let lowerText = text.toLowerCase();
+            
+            for (let [word, symbol] of Object.entries(keywords)) {
+                if (lowerText.includes(word)) {
+                    symbols.push(symbol);
+                }
+            }
+            
+            return `Mode: Comparative Analysis<br>
+                    Symbols: ${symbols.join('')}<br>
+                    Alignment: ${(symbols.length * 0.2).toFixed(2)}<br>
+                    Analysis: Found ${symbols.length} comparative elements`;
+        }
+    </script>
+</body>
+</html>
