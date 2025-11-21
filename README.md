@@ -34,3 +34,11 @@ Output: Symbols: ⌒┘┬— | STI Score: 0.774
 
 ## Live Demo
 Test AXIOM online: [Online Python](https://www.online-python.com/)
+
+## Version Progress
+
+🚀 **See [COMPARISON.md](COMPARISON.md)** for detailed analysis of AXIOM's iterative improvement from v1.0 to v1.4, showing 495% STI improvement on physics examples!
+
+## Recommended Version
+- **`axiom_v1.4.py`** - Latest version with optimal accuracy
+- **`axiom_cli.py`** - Original stable version
