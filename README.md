@@ -42,3 +42,17 @@ Test AXIOM online: [Online Python](https://www.online-python.com/)
 ## Recommended Version
 - **`axiom_v1.4.py`** - Latest version with optimal accuracy
 - **`axiom_cli.py`** - Original stable version
+
+
+## Version History
+
+| Version | File | Key Improvement | Status |
+|---------|------|-----------------|--------|
+| v1.0 | `axiom_cli.py` | Basic keyword matching | ✅ Stable |
+| v1.2 | `axiom_enhanced.py` | Domain-specific vocabulary | 🔧 Experimental |
+| v1.3 | `axiom_v1.3.py` | Smart word matching | 🔧 Experimental |
+| v1.4 | `axiom_v1.4.py` | **Advanced word variations** | ✅ **Recommended** |
+
+## Usage Recommendation
+- **For production/research**: Use `axiom_v1.4.py`
+- **For education/understanding**: Study the version progression
