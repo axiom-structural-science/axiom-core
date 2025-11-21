@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>AXIOM Framework — Examples Library (Scrollable Cards)</title>
+<style>
+  :root{
+    --bg-1:#0f172a; --accent:#06b6d4; --muted:#6b7280; --card:#ffffff;
+    --glass: rgba(255,255,255,0.06);
+    --radius:14px;
+    --maxw:1200px;
+  }
+  html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;}
+  body{
+    background: linear-gradient(180deg,#071123 0%, #0f172a 45%, #071026 100%);
+    color:#e6eef6;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    padding:24px;
+    display:flex;
+    justify-content:center;
+  }
+  .page {
+    width:100%;
+    max-width:var(--maxw);
+    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border-radius:18px;
+    box-shadow: 0 10px 40px rgba(2,6,23,0.6);
+    overflow:hidden;
+    border: 1px solid rgba(255,255,255,0.03);
+  }
+
+  /* header */
+  header{
+    padding:28px 28px 16px 28px;
+    display:flex;
+    gap:16px;
+    align-items:flex-start;
+    justify-content:space-between;
+  }
+  .brand {
+    display:flex; gap:16px; align-items:center;
+  }
+  .logo {
+    width:56px;height:56px;border-radius:10px;
+    background:linear-gradient(135deg,var(--accent), #7c3aed);
+    display:flex;align-items:center;justify-content:center;font-weight:700;color:#021124;
+    box-shadow: 0 6px 18px rgba(7,22,40,0.6);
+    font-size:20px;
+  }
+  h1{font-size:20px;margin:0;color:#ffffff}
+  p.lead{margin:4px 0 0 0;color:var(--muted);font-size:13px;max-width:760px}
+
+  /* right control area */
+  .controls{display:flex;gap:12px;align-items:center}
+  .chip{background:rgba(255,255,255,0.03);padding:8px 12px;border-radius:999px;color:#cfeff6;font-size:13px;border:1px solid rgba(255,255,255,0.02)}
+  .small{font-size:13px;color:var(--muted)}
+  .calc {
+    background:var(--card); color:#072034; padding:8px;border-radius:10px;border:1px solid rgba(2,6,23,0.1);
+    display:flex;gap:8px;align-items:center;font-size:13px;
+  }
+
+  /* intro */
+  .intro {
+    padding:16px 28px 24px 28px;
+    display:flex;
+    gap:18px;
+    align-items:flex-start;
+    border-top:1px solid rgba(255,255,255,0.02);
+    border-bottom:1px solid rgba(255,255,255,0.02);
+  }
+  .intro .text {flex:1}
+  .intro h2{margin:0;color:#fff;font-size:16px}
+  .intro p{color:var(--muted);margin-top:8px;line-height:1.45}
+
+  /* Node lexicon / quick */
+  .node-lexicon{
+    display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;
+  }
+  .node{
+    background:rgba(255,255,255,0.02);
+    padding:8px 10px;border-radius:10px;border:1px solid rgba(255,255,255,0.02);
+    display:flex;gap:10px;align-items:center;font-size:13px;color:#d7eef8;
+  }
+  .symbol {font-family: "Courier New", monospace; font-size:18px; width:30px;text-align:center}
+
+  /* examples area */
+  .examples-wrap{padding:20px 22px 28px 22px}
+  .examples-header {display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}
+  .examples-title {font-size:16px;color:#eaf6fb}
+  .examples-sub {color:var(--muted);font-size:13px}
+
+  /* horizontal scroller */
+  .scroller {
+    display:flex;
+    overflow-x:auto;
+    gap:18px;
+    padding:18px;
+    scroll-snap-type:x mandatory;
+    -webkit-overflow-scrolling:touch;
+  }
+  .scroller::-webkit-scrollbar{height:10px}
+  .scroller::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.05);border-radius:10px}
+
+  .card {
+    scroll-snap-align:center;
+    min-width:320px;
+    max-width:520px;
+    width:72%;
+    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border-radius:14px;
+    padding:16px;
+    border:1px solid rgba(255,255,255,0.03);
+    box-shadow: 0 8px 30px rgba(3,8,20,0.6);
+    color:#dff7fb;
+    transition: transform .22s ease, box-shadow .22s ease;
+    position:relative;
+  }
+  .card:active, .card:hover { transform: translateY(-6px); box-shadow:0 18px 40px rgba(3,8,20,0.7) }
+
+  .card h3{margin:0 0 6px 0;color:#fff;font-size:15px}
+  .card .meta { font-size:13px;color:var(--muted); margin-bottom:10px }
+  .card .symbols { font-family: "Courier New", monospace; font-size:20px; color:#aeeefb; margin-bottom:8px }
+
+  .card .summary { color: #d6eef8; font-size:14px; line-height:1.35; margin-bottom:10px }
+
+  /* inline expansion */
+  .expander {
+    background: rgba(255,255,255,0.02);
+    border-radius:10px;
+    padding:12px;
+    margin-top:8px;
+    color:#e8fbff;
+    border:1px solid rgba(255,255,255,0.03);
+    display:none;
+  }
+  .expander.visible{display:block}
+
+  .expander h4{margin:0 0 8px 0;color:#fff;font-size:14px}
+  .expander pre { background: rgba(0,0,0,0.25); padding:10px;border-radius:8px; color:#f0fbff; overflow:auto; font-size:13px }
+  .expander .row { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:8px }
+  .tag { background: rgba(255,255,255,0.03); padding:6px 8px; border-radius:999px; font-size:13px; color:#dff7fb; border:1px solid rgba(255,255,255,0.02) }
+
+  /* expand button */
+  .card-footer { display:flex; justify-content:space-between; align-items:center; gap:8px; margin-top:12px }
+  .btn { background:var(--accent); color:#021124; padding:8px 12px;border-radius:10px;border:none; cursor:pointer; font-weight:600 }
+  .btn.ghost { background:transparent; color:#9eeff8; border:1px solid rgba(255,255,255,0.03) }
+
+  /* responsive behavior */
+  @media (max-width:880px){
+    .card{ width:78%; min-width:280px }
+    .scroller { padding-left:14px; padding-right:14px }
+  }
+  @media (max-width:560px){
+    header{flex-direction:column;align-items:flex-start;gap:12px}
+    .controls{width:100%;justify-content:space-between}
+    .intro{flex-direction:column}
+    .card{ width:86%; min-width:260px }
+  }
+
+  /* footer */
+  footer{background:rgba(255,255,255,0.02);color:var(--muted);font-size:13px;padding:14px;border-top:1px solid rgba(255,255,255,0.02);text-align:center}
+</style>
+</head>
+<body>
+  <div class="page" role="main" aria-label="AXIOM Framework examples demo">
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden="true">AX</div>
+        <div>
+          <h1>AXIOM — Architectural X-ray for Integrated Ontological Modeling</h1>
+          <p class="lead">Interactive Examples Library — Scrollable cards. Hybrid inline expansion (Style 3). Mobile-first, accessible demo of AXIOM's case studies and truth metrics (STI & CTI).</p>
+        </div>
+      </div>
+
+      <div class="controls" aria-hidden="false">
+        <div class="chip">v1.1 · Examples Library</div>
+        <div class="calc" title="STI / CTI Quick Calculators">
+          <div>
+            <div style="font-size:12px;color:#083040">STI (weighted)</div>
+            <div id="live-sti" style="font-weight:700">—</div>
+          </div>
+          <div style="width:12px"></div>
+          <div>
+            <div style="font-size:12px;color:#083040">CTI</div>
+            <div id="live-cti" style="font-weight:700">—</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section class="intro" aria-labelledby="introTitle">
+      <div class="text">
+        <h2 id="introTitle">Welcome — What AXIOM Does</h2>
+        <p>AXIOM provides a universal structural language (18 core nodes) to diagnose explanatory completeness, generate hypotheses, produce testable predictions, and prescribe architecture-level solutions across disciplines. Use the cards below to explore 10 fully processed examples that demonstrate AXIOM’s end-to-end workflow: Structural Audit → Quantitative Binding → Solution Generation → Multi-layer Validation.</p>
+
+        <div class="node-lexicon" aria-hidden="false">
+          <!-- a compact subset shown; full lexicon available in each card -->
+          <div class="node"><span class="symbol">│</span>Initiation</div>
+          <div class="node"><span class="symbol">⌒</span>Flow</div>
+          <div class="node"><span class="symbol">█</span>Processing</div>
+          <div class="node"><span class="symbol">┴</span>Imprint</div>
+          <div class="node"><span class="symbol">┬</span>Emergence</div>
+          <div class="node"><span class="symbol">—</span>Containment</div>
+          <div class="node"><span class="symbol">┘</span>Recurrence</div>
+          <div class="node"><span class="symbol">⟦⟧</span>Identity</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="examples-wrap" aria-labelledby="examplesTitle">
+      <div class="examples-header">
+        <div>
+          <div class="examples-title" id="examplesTitle">📚 AXIOM Case Studies — Scrollable Examples</div>
+          <div class="examples-sub">Swipe horizontally (mobile) or scroll (desktop). Tap a card to expand details.</div>
+        </div>
+        <div class="small">Tip: Snap-scroll for quick navigation</div>
+      </div>
+
+      <div class="scroller" id="scroller" role="list" aria-label="AXIOM examples list">
+        <!-- Cards will be injected by JS -->
+      </div>
+    </section>
+
+    <footer>
+      AXIOM Framework • v1.1 — Demo examples. Data © AXIOM Structural Science. View on GitHub: <a href="https://github.com/axiom-structural-science/axiom-core" style="color:#9eeff8">axiom-structural-science/axiom-core</a>
+    </footer>
+  </div>
+
+<script>
+/* ---------- Core AXIOM data (nodes & weights) ---------- */
+const AXIOM_NODES = [
+  { sym:'│', name:'Initiation', w:1.0, desc:'Source emergence; where the process begins' },
+  { sym:'⌒', name:'Flow', w:1.2, desc:'Continuous propagation; movement of information/energy' },
+  { sym:'█', name:'Processing', w:1.5, desc:'Transformation or computation' },
+  { sym:'┴', name:'Imprint', w:1.1, desc:'Pattern fixation; memory or storage' },
+  { sym:'┬', name:'Emergence', w:1.4, desc:'New state formation or properties' },
+  { sym:'—', name:'Containment', w:1.0, desc:'Boundaries, limits, stability' },
+  { sym:'┘', name:'Recurrence', w:1.1, desc:'Cycles or repetition' },
+  { sym:'⌑', name:'Return', w:1.0, desc:'System reset or completion' },
+  { sym:'¬', name:'Potential', w:0.8, desc:'Latent capacities' },
+  { sym:'◆', name:'Focus', w:0.7, desc:'Attention narrowing or selection' },
+  { sym:'┌', name:'Manifestation', w:0.9, desc:'Observable properties or outputs' },
+  { sym:'└', name:'Domain', w:0.8, desc:'Constraint field' },
+  { sym:'┐', name:'Emission', w:0.7, desc:'Signal release' },
+  { sym:'├', name:'Guidance', w:0.8, desc:'Direction setting' },
+  { sym:'┤', name:'Connection', w:0.8, desc:'Relation or binding' },
+  { sym:'≡', name:'Synchronization', w:1.2, desc:'Pattern alignment' },
+  { sym:'⟦⟧', name:'Identity', w:1.3, desc:'Unique distinction / self' }
+];
+
+const TOTAL_WEIGHT = AXIOM_NODES.reduce((s,n)=>s+n.w,0);
+
+/* ---------- Utility: compute STI (weighted) ---------- */
+function computeSTI(presentSymbols){
+  // presentSymbols: array of symbols present
+  const present = new Set(presentSymbols);
+  let presentWeight=0;
+  AXIOM_NODES.forEach(n=>{ if(present.has(n.sym)) presentWeight += n.w; });
+  const missingWeight = TOTAL_WEIGHT - presentWeight;
+  const sti = 1 - (missingWeight / TOTAL_WEIGHT);
+  return Math.max(0, Math.min(1, sti));
+}
+
+/* ---------- CTI calculator: default weights [0.25,0.35,0.25,0.15] ---------- */
+function computeCTI(sti, empirical, crossDomain, predictive, variant=null){
+  // values expected 0..1
+  let w=[0.25,0.35,0.25,0.15];
+  if(variant==='physics') w=[0.30,0.25,0.30,0.15];
+  if(variant==='experimental') w=[0.20,0.45,0.20,0.15];
+  if(variant==='engineering') w=[0.25,0.30,0.25,0.20];
+  const cti = sti*w[0] + empirical*w[1] + crossDomain*w[2] + predictive*w[3];
+  return Math.max(0, Math.min(1, cti));
+}
+
+/* ---------- Pre-built case studies (10 domains) ---------- */
+/*
+Each case entry contains:
+- id, domain, title, short summary
+- present: array of symbols present in initial model
+- enhanced: array of symbols after AXIOM prescription
+- empirical,cross,predictive: initial evidence scores (0-1)
+- notes: optional additional strings to show in expanded view
+*/
+const CASES = [
+  { id:'physics', domain:'Physics', title:'Dark Matter: Missing Mechanism', summary:'Unexplained gravitational effects imply missing mass or modified gravity — structural gaps in initiation & processing.', present:['⌒','┼','—'], enhanced:['│','⌒','█','—','≡'], empirical:0.40, cross:0.45, predictive:0.30,
+    analysisSteps:[
+      {label:'Structural Analysis', text:'Detected Flow (⌒) and Containment (—) elements; missing Initiation (│), Processing (█), and Identity (⟦⟧). STI indicates structural incompleteness.'},
+      {label:'Hypothesis', text:'Add a potential→raw-force conversion (¬→┼) or introduce new initiation nodes to explain gravity-like effects.'},
+      {label:'Prediction', text:'Search for modified gravity signatures at specific scales; if new particle exists, expect interaction cross-sections within constrained range.'},
+      {label:'Solution', text:'Introduce architectural processing node (█) and synchronization (≡) in cosmological models.'},
+      {label:'Validation', text:'Axial comparison with galaxy rotation curves and gravitational lensing data.'}
+    ]
+  },
+
+  { id:'biology', domain:'Biology', title:'DNA Structural Stability', summary:'Why DNA forms a stable double helix — mapping between imprint, processing and containment.', present:['┴','█','┐'], enhanced:['┴','█','┬','≡','—'], empirical:0.90, cross:0.88, predictive:0.82,
+    analysisSteps:[
+      {label:'Structural Analysis', text:'Present Imprint (┴) and Processing (█). Strong empirical binding to molecular observations.'},
+      {label:'Hypothesis', text:'Stability arises from combined imprint (┴) and containment (—) with synchronization (≡) between complementary strands.'},
+      {label:'Prediction', text:'Sequence perturbations affecting imprint strength should alter replication fidelity within measurable error bounds.'},
+      {label:'Solution', text:'Modeling suggests parameter windows (imprint strength ≥0.7) for stable heredity.'},
+      {label:'Validation', text:'Matches biochemical and crystallographic evidence (high CTI expected).'}
+    ]
+  },
+
+  { id:'ai', domain:'AI', title:'Explainability — The Black Box Problem', summary:'Complex models process inputs but lack manifest pathways to outputs (missing imprint & synchronization).', present:['█','⌒'], enhanced:['█','⌒','┴','≡','┌'], empirical:0.55, cross:0.60, predictive:0.50,
+    analysisSteps:[
+      {label:'Structural Analysis', text:'Processing present but Imprint (┴) and Synchronization (≡) are weak or absent; STI suboptimal.'},
+      {label:'Hypothesis', text:'Integrate explicit memory (┴) and synchronization (≡) pathways to enable traceable explanations.'},
+      {label:'Prediction', text:'Models augmented with explainable memory traces will show higher interpretability metrics without loss of accuracy.'},
+      {label:'Solution', text:'Design architectures with logging of internal state projections and cross-layer congruence nodes.'},
+      {label:'Validation', text:'Pilot studies in model interpretability show improved human-understandable explanations.'}
+    ]
+  },
+
+  { id:'neuro', domain:'Neuroscience', title:'Consciousness — The Hard Problem', summary:'Bridging processing to subjective identity by adding imprint, recurrence and containment.', present:['⌒','█','┬','⟦⟧'], enhanced:['│','⌒','█','┴','┘','≡','—','┬','⟦⟧'], empirical:0.82, cross:0.88, predictive:0.79,
+    analysisSteps:[
+      {label:'Structural Analysis', text:'Core nodes for emergence and processing present, but missing Recurrent imprint cycles and containment boundaries reduce STI.'},
+      {label:'Hypothesis', text:'Add recurrent maintenance (┘) and memory imprint (┴) to preserve subjective continuity.'},
+      {label:'Prediction', text:'Rhythmic synchronization (40Hz ±10Hz) and 200–500ms maintenance windows correlate with reportable conscious content.'},
+      {label:'Solution', text:'Architect recurrent neural loops and predictive boundaries to produce robust identity formation.'},
+      {label:'Validation', text:'Consistent with Global Workspace and integrated information insights; CTI shows strong support after augmentation.'}
+    ]
+  },
+
+  { id:'psych', domain:'Psychology', title:'Why Humans Find Sunsets Beautiful', summary:'Aesthetic preference arises from flow→processing→imprint→emergence — predictable color & temporal patterns.', present:['│','⌒','█','┴','┬','—'], enhanced:['│','⌒','█','┴','┬','—','┘'], empirical:0.78, cross:0.72, predictive:0.70,
+    analysisSteps:[
+      {label:'Structural Analysis', text:'Natural structural flow present (NSF) delivering high STI; imprint and containment generate stable preference.'},
+      {label:'Hypothesis', text:'Optimal color ratios & processing windows yield universal appeal within parameter ranges.'},
+      {label:'Prediction', text:'Optimal color ratio near 0.882 ±0.015; memory retention >0.7 after 24 hours for strong aesthetic encoding.'},
+      {label:'Solution', text:'Design applications using these parameter ranges for improved universal appeal.'},
+      {label:'Validation', text:'Cross-domain consistency observed across optics, neuroscience and cultural studies.'}
+    ]
+  },
+
+  { id:'econ', domain:'Economics', title:'Market Crashes — Structural Triggers', summary:'Rapid systemic collapses often follow missing containment and recurrence mechanisms in market architecture.', present:['⌒','█','┤'], enhanced:['⌒','█','—','┘','≡'], empirical:0.62, cross:0.58, predictive:0.55,
+    analysisSteps:[
+      {label:'Structural Analysis', text:'Flow of capital (⌒) and processing (█) detected; weak containment (—) produces cascade risk.'},
+      {label:'Hypothesis', text:'Introduce containment policies (—) and enforced recurrence checks (┘) to dampen cascades.'},
+      {label:'Prediction', text:'Markets with high containment indices show lower crash probability within modeled simulation windows.'},
+      {label:'Solution', text:'Design regulatory boundaries and synchronization of monitoring systems.'},
+      {label:'Validation', text:'Agent-based models confirm improved resilience with added AXIOM nodes.'}
+    ]
+  },
+
+  { id:'cog', domain:'Cognition', title:'Working Memory Formation', summary:'Why short-term retention requires imprint + recurrence within processing windows.', present:['█','┴','⌒'], enhanced:['█','┴','┘','⌒','≡','┬'], empirical:0.74, cross:0.70, predictive:0.68,
+    analysisSteps:[
+      {label:'Structural Analysis', text:'Processing and imprint present, but recurrence cycles need strengthening to sustain working memory.'},
+      {label:'Hypothesis', text:'Recurrent loops with synchronization increase persistence and reportability.'},
+      {label:'Prediction', text:'Maintenance thresholds of 200–500ms critical for integration into conscious reports.'},
+      {label:'Solution', text:'Enhance recurrent buffers and synchronization across relevant networks.'},
+      {label:'Validation', text:'Matches cognitive neuroscience timing data and memory performance correlations.'}
+    ]
+  },
+
+  { id:'geometry', domain:'Geometry', title:'Why Area of Circle = πr²', summary:'Derivation emerges from containment, initiation, and flow — formal mapping of geometric proof.', present:['┌','—','│'], enhanced:['┌','—','│','⌒','█'], empirical:0.95, cross:0.93, predictive:0.90,
+    analysisSteps:[
+      {label:'Structural Analysis', text:'Manifestation (┌) and containment (—) are present for geometric law; high STI as derivation is formal and constrained.'},
+      {label:'Hypothesis', text:'Re-express area as integrated flow across infinitesimal rings (⌒→∫→┌) to reveal πr².'},
+      {label:'Prediction', text:'Integration parameterization yields exact form with mathematical proof.'},
+      {label:'Solution', text:'Standard calculus derivation (flow→processing→manifestation) reproduces result.'},
+      {label:'Validation', text:'Mathematical derivation and proof provide maximal empirical/ logical support (CTI high).'}
+    ]
+  },
+
+  { id:'astro', domain:'Astrology', title:'Astrology: Structural Elegance vs Empirical Binding', summary:'Astrology maps identity and pattern but lacks empirical binding and cross-domain consistency — structural elegance may hide low CTI.', present:['⟦⟧','≡','┌'], enhanced:['⟦⟧','≡','┌','—','┴'], empirical:0.12, cross:0.20, predictive:0.08,
+    analysisSteps:[
+      {label:'Structural Analysis', text:'Identity and synchronization nodes appear in astrological narratives, producing apparent pattern matching, but empirical parameter binding is weak.'},
+      {label:'Hypothesis', text:'If containment and imprint are demonstrated with reproducible effect sizes, CTI could increase — current evidence low.'},
+      {label:'Prediction', text:'High-quality controlled trials would be required to move empirical score upward; current predictions show low effect sizes.'},
+      {label:'Solution', text:'Introduce transparent statistical testing and pre-registered studies to separate pattern recognition from causation.'},
+      {label:'Validation', text:'AXIOM highlights low CTI despite structural elegance; classification as low empirical support stands.'}
+    ]
+  },
+
+  { id:'math', domain:'Mathematics', title:'Prime Distribution Patterns', summary:'Structural nodes capture identity and synchronization in number theory; mathematical proofs provide high CTI when rigorous.', present:['⟦⟧','≡','┌','█'], enhanced:['⟦⟧','≡','┌','█','│'], empirical:0.92, cross:0.88, predictive:0.85,
+    analysisSteps:[
+      {label:'Structural Analysis', text:'Identity and synchronization manifest in conjectures about primes; rigorous proofs provide strong STI and CTI.'},
+      {label:'Hypothesis', text:'Introduce initiation (│) through formal axioms to close gaps in conjectural predictions.'},
+      {label:'Prediction', text:'Analytic number theory bounds will refine distribution estimates (e.g., prime gaps, density).'},
+      {label:'Solution', text:'Formal proofs and improved analytic techniques increase CTI.'},
+      {label:'Validation', text:'Mathematical validation is strong when proofs exist; AXIOM highlights where formalization is lacking.'}
+    ]
+  }
+];
+
+/* ---------- Render cards ---------- */
+const scroller = document.getElementById('scroller');
+function renderCards(){
+  scroller.innerHTML = '';
+  CASES.forEach(c=>{
+    const card = document.createElement('article');
+    card.className='card';
+    card.setAttribute('role','listitem');
+    card.innerHTML = `
+      <h3>${c.domain}: ${escapeHtml(c.title)}</h3>
+      <div class="meta">Domain • ${c.domain}</div>
+      <div class="symbols">${c.present.join(' ')}</div>
+      <div class="summary">${escapeHtml(c.summary)}</div>
+      <div class="card-footer">
+        <div>
+          <button class="btn" data-id="${c.id}" aria-expanded="false">View Details</button>
+          <button class="btn ghost" data-recompute="${c.id}">Recompute STI</button>
+        </div>
+        <div style="text-align:right">
+          <div class="tag">STI: <strong id="${c.id}-sti">—</strong></div>
+          <div style="height:6px"></div>
+          <div class="tag">CTI: <strong id="${c.id}-cti">—</strong></div>
+        </div>
+      </div>
+      <div class="expander" id="${c.id}-expander" aria-hidden="true">
+        <h4>AXIOM Full Pipeline — ${escapeHtml(c.title)}</h4>
+        <div class="row"><div class="tag">Present: ${c.present.join(' ')}</div><div class="tag">Enhanced: ${c.enhanced.join(' ')}</div></div>
+        <pre id="${c.id}-analysis">Loading analysis...</pre>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+          <button class="btn ghost" data-collapse="${c.id}">Close</button>
+        </div>
+      </div>
+    `;
+    scroller.appendChild(card);
+
+    // compute default STI/CTI and populate
+    setTimeout(()=>{ recomputeCase(c.id); populateAnalysisText(c); },20);
+  });
+}
+renderCards();
+
+/* ---------- helpers ---------- */
+function escapeHtml(s){ return (s||'').replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[m]); }
+
+/* ---------- populate analysis content ---------- */
+function populateAnalysisText(caseObj){
+  const pre = document.getElementById(`${caseObj.id}-analysis`);
+  const sti = computeSTI(caseObj.present);
+  const cti = computeCTI(sti, caseObj.empirical, caseObj.cross, caseObj.predictive, caseObj.domain.toLowerCase()==='physics' ? 'physics' : null);
+  // build a concise expanded report similar to your example
+  const sb = [];
+  sb.push(`1) Structural Analysis:`);
+  sb.push(`   Present nodes: ${caseObj.present.join(' ')} `);
+  sb.push(`   Missing nodes: ${AXIOM_NODES.filter(n=>!caseObj.present.includes(n.sym)).map(n=>n.sym).join(' ')}`);
+  sb.push(`   STI (weighted): ${sti.toFixed(3)}`);
+  sb.push('');
+  caseObj.analysisSteps.forEach(step=>{
+    sb.push(`${step.label}:`);
+    sb.push(`  ${step.text}`);
+    sb.push('');
+  });
+  sb.push(`CTI components: Empirical=${caseObj.empirical.toFixed(2)}, Cross-Domain=${caseObj.cross.toFixed(2)}, Predictive=${caseObj.predictive.toFixed(2)}`);
+  sb.push(`Composite Truth Index (CTI): ${cti.toFixed(3)}`);
+  pre.textContent = sb.join('\n');
+}
+
+/* ---------- recompute and update display ---------- */
+function recomputeCase(caseId){
+  const c = CASES.find(x=>x.id===caseId);
+  if(!c) return;
+  const sti = computeSTI(c.present);
+  const cti = computeCTI(sti, c.empirical, c.cross, c.predictive, c.domain.toLowerCase()==='physics' ? 'physics' : null);
+  document.getElementById(`${caseId}-sti`).textContent = sti.toFixed(3);
+  document.getElementById(`${caseId}-cti`).textContent = cti.toFixed(3);
+  // Update top-right live indicators with focused values (last computed)
+  document.getElementById('live-sti').textContent = sti.toFixed(3);
+  document.getElementById('live-cti').textContent = cti.toFixed(3);
+}
+
+/* ---------- event delegation: expand, collapse, recompute ---------- */
+scroller.addEventListener('click', (ev)=>{
+  const viewBtn = ev.target.closest('button[data-id]');
+  if(viewBtn){
+    const id = viewBtn.getAttribute('data-id');
+    toggleExpand(id);
+    return;
+  }
+  const recBtn = ev.target.closest('button[data-recompute]');
+  if(recBtn){
+    const id = recBtn.getAttribute('data-recompute');
+    recomputeCase(id);
+    flashRecompute(id);
+    return;
+  }
+  const collapseBtn = ev.target.closest('button[data-collapse]');
+  if(collapseBtn){
+    const id = collapseBtn.getAttribute('data-collapse');
+    collapseExpand(id);
+    return;
+  }
+});
+
+/* ---------- expand/collapse functions ---------- */
+function toggleExpand(id){
+  const exp = document.getElementById(`${id}-expander`);
+  const btn = document.querySelector(`button[data-id="${id}"]`);
+  const open = exp.classList.toggle('visible');
+  exp.setAttribute('aria-hidden', !open);
+  btn.setAttribute('aria-expanded', open);
+  // smooth scroll card into center for small viewports
+  const card = btn.closest('.card');
+  card.scrollIntoView({behavior:'smooth', inline:'center', block:'nearest'});
+}
+function collapseExpand(id){
+  const exp = document.getElementById(`${id}-expander`);
+  const btn = document.querySelector(`button[data-id="${id}"]`);
+  if(exp && exp.classList.contains('visible')){ exp.classList.remove('visible'); exp.setAttribute('aria-hidden','true'); btn.setAttribute('aria-expanded','false'); }
+}
+
+/* ---------- small UX: visual flash on recompute ---------- */
+function flashRecompute(id){
+  const el = document.getElementById(`${id}-sti`);
+  if(!el) return;
+  el.style.transition='transform .18s ease';
+  el.style.transform='scale(1.05)';
+  setTimeout(()=>{ el.style.transform=''; },220);
+}
+
+/* ---------- keyboard accessibility for scroller (left/right) ---------- */
+scroller.tabIndex = 0;
+scroller.addEventListener('keydown', (e)=>{
+  if(e.key==='ArrowRight') scroller.scrollBy({left: Math.floor(scroller.clientWidth*0.6), behavior:'smooth'});
+  if(e.key==='ArrowLeft') scroller.scrollBy({left: -Math.floor(scroller.clientWidth*0.6), behavior:'smooth'});
+});
+
+/* ---------- initialize live top indicators with first case ---------- */
+if(CASES.length>0) recomputeCase(CASES[0].id);
+
+</script>
+</body>
+</html>
